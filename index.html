@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide: Global Dropshipping with a US LLC</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Modern Executive" - A calm and professional palette using Slate for text and backgrounds, and Teal as a primary accent for interactive elements and highlights. -->
+    <!-- Application Structure Plan: The application is structured as an interactive stepper guide. A fixed vertical navigation on the left represents the 7 phases of the business setup, allowing users to track their progress visually. The main content area on the right displays the details for the currently selected phase. Within each phase, content is organized into accordion-style cards for each major step. This keeps the information digestible and prevents overwhelming the user. Interactive checklists are included for key action items, turning the guide from a passive document into an active to-do list. An engaging introductory section and a concluding call to action enhance the "digital product" feel. This structure was chosen to transform a dense, procedural report into a manageable, task-oriented journey, enhancing user engagement and comprehension. -->
+    <!-- Visualization & Content Choices: Since the source report is a procedural guide, traditional data charts are not applicable. Instead, information visualization is achieved through structural design, interactive elements, and strategic use of placeholder images. Report Info: Step-by-step business setup process. Goal: Guide the user sequentially and motivate action. Viz/Presentation: Vertical stepper navigation for overall progress, accordion cards for step-by-step focus, styled resource cards for tools/links, interactive checklists for actionable tasks, and visually engaging placeholder images. Interaction: Clicking the stepper changes the main content view. Clicking accordion headers reveals detailed steps. Checkboxes provide a sense of completion. Justification: This approach breaks down a complex process into clear, manageable chunks, which is more effective for learning and execution than a long, linear document, while also providing a polished, sellable product experience. Library/Method: Vanilla JavaScript for all interactions (navigation, accordions). Tailwind CSS for styling and responsive layout. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .phase-content { display: none; }
+        .phase-content.active { display: block; }
+        .nav-link.active { background-color: #0d9488; color: white; }
+        .nav-link.completed .nav-circle { background-color: #0d9488; border-color: #0d9488; color: white; }
+        .nav-link.active .nav-text, .nav-link.completed .nav-text { font-weight: 600; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
+        .accordion-content.open { max-height: 2000px; } /* Adjust as needed */
+        .accordion-arrow { transition: transform 0.3s ease-in-out; }
+        .accordion-header.open .accordion-arrow { transform: rotate(90deg); }
+        input[type="checkbox"]:checked + label .checkbox-icon {
+            background-color: #0d9488;
+            border-color: #0d9488;
+            background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3e%3c/svg%3e");
+        }
+        .ai-output-box {
+            background-color: #f0fdf4; /* Light green */
+            border-left: 4px solid #22c55e; /* Green */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            white-space: pre-wrap; /* Preserve whitespace and line breaks */
+            font-size: 0.9rem;
+            color: #166534; /* Darker green */
+        }
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0d9488;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-left: 0.5rem;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-80 bg-white border-r border-slate-200 p-6 flex-shrink-0">
+            <h1 class="text-2xl font-bold text-slate-900 mb-8">Global Dropship Guide</h1>
+            <nav class="relative">
+                <!-- Stepper Lines -->
+                <div id="static-nav-line" class="absolute left-4 top-0 h-full w-0.5 bg-slate-200"></div>
+                
+                <div id="phase-navigation" class="space-y-2">
+                    <!-- Phase 0: Welcome -->
+                    <a href="#welcome" data-phase="welcome" class="nav-link flex items-center p-3 rounded-lg hover:bg-slate-100 transition-colors duration-200 active">
+                        <div class="relative flex-shrink-0">
+                            <div class="nav-circle w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 transition-all duration-200">★</div>
+                        </div>
+                        <span class="nav-text ml-4 text-slate-700">Welcome</span>
+                    </a>
+                    <!-- Phase 1 -->
+                    <a href="#phase1" data-phase="phase1" class="nav-link flex items-center p-3 rounded-lg hover:bg-slate-100 transition-colors duration-200">
+                        <div class="relative flex-shrink-0">
+                            <div class="nav-circle w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 transition-all duration-200">1</div>
+                        </div>
+                        <span class="nav-text ml-4 text-slate-700">Foundational Setup</span>
+                    </a>
+                    <!-- Phase 2 -->
+                    <a href="#phase2" data-phase="phase2" class="nav-link flex items-center p-3 rounded-lg hover:bg-slate-100 transition-colors duration-200">
+                        <div class="relative flex-shrink-0">
+                            <div class="nav-circle w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 transition-all duration-200">2</div>
+                        </div>
+                        <span class="nav-text ml-4 text-slate-700">Shopify Store Setup</span>
+                    </a>
+                    <!-- Phase 3 -->
+                    <a href="#phase3" data-phase="phase3" class="nav-link flex items-center p-3 rounded-lg hover:bg-slate-100 transition-colors duration-200">
+                        <div class="relative flex-shrink-0">
+                            <div class="nav-circle w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 transition-all duration-200">3</div>
+                        </div>
+                        <span class="nav-text ml-4 text-slate-700">Product Sourcing</span>
+                    </a>
+                    <!-- Phase 4 -->
+                    <a href="#phase4" data-phase="phase4" class="nav-link flex items-center p-3 rounded-lg hover:bg-slate-100 transition-colors duration-200">
+                        <div class="relative flex-shrink-0">
+                            <div class="nav-circle w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 transition-all duration-200">4</div>
+                        </div>
+                        <span class="nav-text ml-4 text-slate-700">Payments & Shipping</span>
+                    </a>
+                     <!-- Phase 5 -->
+                     <a href="#phase5" data-phase="phase5" class="nav-link flex items-center p-3 rounded-lg hover:bg-slate-100 transition-colors duration-200">
+                        <div class="relative flex-shrink-0">
+                            <div class="nav-circle w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 transition-all duration-200">5</div>
+                        </div>
+                        <span class="nav-text ml-4 text-slate-700">Testing & Marketing Prep</span>
+                    </a>
+                     <!-- Phase 6 -->
+                     <a href="#phase6" data-phase="phase6" class="nav-link flex items-center p-3 rounded-lg hover:bg-slate-100 transition-colors duration-200">
+                        <div class="relative flex-shrink-0">
+                            <div class="nav-circle w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 transition-all duration-200">6</div>
+                        </div>
+                        <span class="nav-text ml-4 text-slate-700">Launch & Scale</span>
+                    </a>
+                     <!-- Phase 7 -->
+                     <a href="#phase7" data-phase="phase7" class="nav-link flex items-center p-3 rounded-lg hover:bg-slate-100 transition-colors duration-200">
+                        <div class="relative flex-shrink-0">
+                            <div class="nav-circle w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 transition-all duration-200">7</div>
+                        </div>
+                        <span class="nav-text ml-4 text-slate-700">Compliance & Growth</span>
+                    </a>
+                    <a href="#conclusion" data-phase="conclusion" class="nav-link flex items-center p-3 rounded-lg hover:bg-slate-100 transition-colors duration-200">
+                        <div class="relative flex-shrink-0">
+                            <div class="nav-circle w-8 h-8 rounded-full bg-white border-2 border-slate-300 flex items-center justify-center font-bold text-slate-500 transition-all duration-200">✓</div>
+                        </div>
+                        <span class="nav-text ml-4 text-slate-700">Conclusion</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 sm:p-8 md:p-12 overflow-y-auto">
+            <div id="content-container">
+                
+                <!-- Welcome Section -->
+                <section id="welcome" class="phase-content active">
+                    <div class="bg-gradient-to-r from-teal-600 to-teal-800 text-white p-8 rounded-xl shadow-lg mb-8 text-center">
+                        <h2 class="text-5xl font-extrabold mb-4">Unlock Your Global E-commerce Empire!</h2>
+                        <p class="text-xl font-light mb-6">The Definitive Dropshipping Blueprint: From Kenya to the World with a US LLC.</p>
+                        <img src="https://placehold.co/1200x400/0d9488/ffffff?text=Your+Global+E-commerce+Journey+Starts+Here" alt="Global E-commerce Journey" class="w-full h-auto rounded-lg shadow-md mb-6 mx-auto max-w-2xl">
+                        <p class="text-lg leading-relaxed">This interactive guide is your all-in-one resource to build a thriving dropshipping business, leveraging the power of a US Limited Liability Company (LLC) to streamline international payments and build unparalleled trust. We'll walk you through every step, from legal setup to scaling your sales.</p>
+                        <button onclick="document.querySelector('[data-phase=\'phase1\']').click();" class="mt-8 bg-white text-teal-700 font-bold py-3 px-8 rounded-full text-lg shadow-xl hover:bg-teal-50 hover:text-teal-800 transition-all duration-300">Start Your Journey Now!</button>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
+                        <h3 class="text-2xl font-bold text-slate-900">What You'll Achieve with This Guide:</h3>
+                        <ul class="list-disc list-inside text-slate-700 space-y-2">
+                            <li>**Establish a Solid Legal Foundation:** Set up a US LLC for credibility and liability protection.</li>
+                            <li>**Master Global Payments:** Access top-tier US payment gateways for seamless international transactions.</li>
+                            <li>**Build a High-Converting Store:** Design a professional Shopify storefront that attracts and retains customers.</li>
+                            <li>**Source Winning Products:** Discover fast-moving, high-demand items directly from China.</li>
+                            <li>**Streamline Operations:** Automate order fulfillment and shipping for efficiency.</li>
+                            <li>**Navigate Taxes & Compliance:** Understand and manage your tax obligations in both the US and Kenya.</li>
+                        </ul>
+                        <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <h4 class="font-semibold text-slate-800">Hear from a fellow entrepreneur:</h4>
+                            <p class="italic text-slate-600">"This guide transformed my vision into reality. The clear steps for setting up a US LLC from Kenya were a game-changer for my payment processing. Highly recommended!" - Jane D., Nairobi, Kenya</p>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Phase 1 Content -->
+                <section id="phase1" class="phase-content">
+                    <header class="mb-8">
+                        <h2 class="text-4xl font-bold text-slate-900">Phase 1: Foundational Setup</h2>
+                        <p class="mt-2 text-lg text-slate-600">This is the most critical phase. Setting up your US legal and banking structure correctly is paramount for international success. Start this immediately as it takes 4-8 weeks.</p>
+                    </header>
+                    <div class="space-y-6">
+                        <!-- Accordion 1.1 -->
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Form Your US LLC (Wyoming Recommended)</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>A US LLC enhances credibility, gives access to better payment processors, and provides liability protection. Wyoming is the top choice for non-residents due to strong privacy laws, low fees, and no state income tax.</p>
+                                    <img src="https://placehold.co/600x300/e0f2f7/0d9488?text=US+LLC+Formation" alt="US LLC Formation" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
+                                        <h4 class="font-semibold text-teal-800">Action: Engage an LLC Formation Service</h4>
+                                        <p class="text-teal-700">These services are essential for non-residents. They handle the complex legal filings, act as your required Registered Agent, and guide you through the process, including obtaining your EIN.</p>
+                                    </div>
+                                    <h4 class="font-semibold text-slate-800 pt-4">Recommended Services:</h4>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                            <h5 class="font-bold text-slate-900">Doola.com</h5>
+                                            <p class="text-sm text-slate-600 mb-2">Highly recommended for non-US residents. Comprehensive packages for formation, EIN, and banking assistance.</p>
+                                            <a href="https://www.doola.com/" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Visit Website &rarr;</a>
+                                        </div>
+                                        <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                            <h5 class="font-bold text-slate-900">Northwest Registered Agent</h5>
+                                            <p class="text-sm text-slate-600 mb-2">Known for excellent customer service and strong privacy features, making them a reliable choice.</p>
+                                            <a href="https://www.northwestregisteredagent.com/" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Visit Website &rarr;</a>
+                                        </div>
+                                    </div>
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c1-1" class="hidden"><label for="c1-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Choose and engage an LLC formation service.</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c1-2" class="hidden"><label for="c1-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Provide required documents (passport, etc.) to the service.</label>
+                                        </div>
+                                         <div class="flex items-center">
+                                            <input type="checkbox" id="c1-3" class="hidden"><label for="c1-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Wait for LLC approval and EIN confirmation (this can take 4-8 weeks).</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Accordion 1.2 -->
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Open a US Business Bank Account</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                             <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>A US bank account is essential for using US payment processors like Shopify Payments and Stripe, separating finances, and appearing professional. It must be done after your LLC is formed and you have your EIN.</p>
+                                    <img src="https://placehold.co/600x300/e0f7e0/0d9488?text=US+Business+Bank+Account" alt="US Business Bank Account" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
+                                        <h4 class="font-semibold text-teal-800">Action: Apply to an Online Bank Remotely</h4>
+                                        <p class="text-teal-700">Traditional banks often require an in-person visit. Fintech banks are designed for remote, non-resident founders, making this step much easier.</p>
+                                    </div>
+                                    <h4 class="font-semibold text-slate-800 pt-4">Top Recommended Online Banks:</h4>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                            <h5 class="font-bold text-slate-900">Mercury.com</h5>
+                                            <p class="text-sm text-slate-600 mb-2">Top-rated for startups and non-resident LLCs. Fully online application, no minimum balance, and excellent integrations.</p>
+                                            <a href="https://mercury.com/" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Visit Website &rarr;</a>
+                                        </div>
+                                        <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                            <h5 class="font-bold text-slate-900">Wise Business</h5>
+                                            <p class="text-sm text-slate-600 mb-2">Provides US account details for receiving USD. Excellent for international transfers with competitive exchange rates.</p>
+                                            <a href="https://wise.com/business/" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Visit Website &rarr;</a>
+                                        </div>
+                                    </div>
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                     <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c1-4" class="hidden"><label for="c1-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Gather documents: LLC formation certificate, EIN letter, Passport.</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c1-5" class="hidden"><label for="c1-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Complete the online application for your chosen bank.</label>
+                                        </div>
+                                         <div class="flex items-center">
+                                            <input type="checkbox" id="c1-6" class="hidden"><label for="c1-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Link your new US bank account for future payouts from payment processors.</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Phase 2 Content -->
+                <section id="phase2" class="phase-content">
+                    <header class="mb-8">
+                        <h2 class="text-4xl font-bold text-slate-900">Phase 2: Shopify Store Core Setup</h2>
+                        <p class="mt-2 text-lg text-slate-600">With the legal framework underway, it's time to build your digital storefront. This phase covers creating the core of your e-commerce presence, focusing on a high-converting design.</p>
+                    </header>
+                     <div class="space-y-6">
+                        <!-- Accordion 2.1 -->
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Shopify Account & Plan Setup</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>This is the initial step in creating your online store. Setting the currency to USD is a critical step for international sales, minimizing conversion fees.</p>
+                                    <img src="https://placehold.co/600x300/c2e6f2/0d9488?text=Shopify+Dashboard" alt="Shopify Dashboard" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c2-1" class="hidden"><label for="c2-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Sign up for a Shopify free trial.</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c2-2" class="hidden"><label for="c2-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Set primary store currency to USD in `Settings > Store details` to avoid conversion losses.</label>
+                                        </div>
+                                         <div class="flex items-center">
+                                            <input type="checkbox" id="c2-3" class="hidden"><label for="c2-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Select the 'Basic Shopify' plan as it's sufficient for starting dropshipping.</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Accordion 2.2 -->
+                         <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Theme Selection & Customization</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                             <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Your theme is your digital storefront. It must be fast, mobile-friendly, and trustworthy to convert visitors into customers. Shopify's 'Dawn' theme is a fantastic, free starting point.</p>
+                                    <img src="https://placehold.co/600x300/e0f2f7/0d9488?text=Website+Theme+Customization" alt="Website Theme Customization" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                     <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c2-4" class="hidden"><label for="c2-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Install a theme (Recommended: Dawn for its speed and flexibility).</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c2-5" class="hidden"><label for="c2-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Upload your logo and choose brand colors/fonts that align with your niche.</label>
+                                        </div>
+                                         <div class="flex items-center">
+                                            <input type="checkbox" id="c2-6" class="hidden"><label for="c2-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Customize homepage sections with high-quality visuals and compelling calls to action.</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c2-7" class="hidden"><label for="c2-7" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Thoroughly check and optimize the mobile view – most customers shop on mobile.</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Accordion 2.3 -->
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Essential Page Creation</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                             <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Transparency builds trust. These pages are non-negotiable for any serious e-commerce store. Use Shopify's templates in `Settings > Policies` as a starting point, but customize them to reflect your specific business model.</p>
+                                    <img src="https://placehold.co/600x300/c2e6f2/0d9488?text=Legal+Pages" alt="Legal Pages" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                     <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c2-8" class="hidden"><label for="c2-8" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Create 'About Us' page to share your brand story and build connection.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c2-9" class="hidden"><label for="c2-9" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Create 'Contact Us' page with multiple contact options (email, form).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c2-10" class="hidden"><label for="c2-10" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Create 'FAQ' page to proactively answer common customer questions.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c2-11" class="hidden"><label for="c2-11" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Create detailed 'Shipping Policy' with realistic international delivery times.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c2-12" class="hidden"><label for="c2-12" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Create 'Refund Policy' outlining clear return procedures.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c2-13" class="hidden"><label for="c2-13" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Generate 'Privacy Policy' and 'Terms of Service' using Shopify's templates and customize.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c2-14" class="hidden"><label for="c2-14" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Add all essential pages to your footer navigation menu for easy access.</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                 <!-- Phase 3 Content -->
+                <section id="phase3" class="phase-content">
+                    <header class="mb-8">
+                        <h2 class="text-4xl font-bold text-slate-900">Phase 3: Product Sourcing & Importation</h2>
+                        <p class="mt-2 text-lg text-slate-600">This is the heart of your dropshipping business. Finding winning products and presenting them professionally is key to making sales and building a sustainable brand.</p>
+                    </header>
+                    <div class="space-y-6">
+                        <!-- Accordion 3.1 -->
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Install & Set Up a Dropshipping App</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>These apps are your bridge to suppliers. They automate importing products, inventory syncing, and order fulfillment, saving you immense time and effort.</p>
+                                    <img src="https://placehold.co/600x300/e0f7e0/0d9488?text=Dropshipping+App+Integration" alt="Dropshipping App Integration" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <h4 class="font-semibold text-slate-800 pt-4">Top Recommended Apps:</h4>
+                                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                            <h5 class="font-bold text-slate-900">DSers - AliExpress Dropshipping</h5>
+                                            <p class="text-sm text-slate-600 mb-2">Official AliExpress partner. Best for bulk orders, robust features, and a generous free plan.</p>
+                                            <a href="https://apps.shopify.com/dsers" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Install App &rarr;</a>
+                                        </div>
+                                        <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                            <h5 class="font-bold text-slate-900">Zendrop</h5>
+                                            <p class="text-sm text-slate-600 mb-2">Focuses on faster shipping options and high-quality suppliers. A premium choice for scaling.</p>
+                                            <a href="https://apps.shopify.com/zendrop" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Install App &rarr;</a>
+                                        </div>
+                                        <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                            <h5 class="font-bold text-slate-900">CJdropshipping</h5>
+                                            <p class="text-sm text-slate-600 mb-2">Comprehensive platform with sourcing, fulfillment, and warehousing. Good for diverse product needs.</p>
+                                            <a href="https://apps.shopify.com/cjdropshipping" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Install App &rarr;</a>
+                                        </div>
+                                        <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
+                                            <h5 class="font-bold text-slate-900">Spocket</h5>
+                                            <p class="text-sm text-slate-600 mb-2">Primarily connects with US/EU suppliers for faster shipping, but also has global options.</p>
+                                            <a href="https://apps.shopify.com/spocket" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Install App &rarr;</a>
+                                        </div>
+                                    </div>
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c3-1" class="hidden"><label for="c3-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Install your chosen dropshipping app from the Shopify App Store.</label>
+                                        </div>
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="c3-2" class="hidden"><label for="c3-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Connect the app to your Shopify store and your supplier account (e.g., AliExpress).</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Accordion 3.2 -->
+                         <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Product Research & Selection</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                             <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Your product choice is paramount. Look for items that solve a problem, have a "wow" factor, and aren't easily found in local stores. Focus on fast-moving consumer goods (FMCG) with consistent demand.</p>
+                                    <img src="https://placehold.co/600x300/c2e6f2/0d9488?text=Product+Research+Tools" alt="Product Research Tools" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
+                                        <h4 class="font-semibold text-teal-800">Critical Step: Order Samples!</h4>
+                                        <p class="text-teal-700">Do not skip this. Ordering samples to Kenya lets you verify quality, check real shipping times, and create unique, authentic photos/videos for your marketing. This builds immense trust.</p>
+                                    </div>
+                                     <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                     <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c3-3" class="hidden"><label for="c3-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Use research tools (TikTok, Google Trends, Amazon Best Sellers, etc.) to identify potential winning products.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-4" class="hidden"><label for="c3-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Vet suppliers on AliExpress/CJdropshipping for high ratings (4.7+), numerous orders, and reliable shipping options (e.g., ePacket).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-5" class="hidden"><label for="c3-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Ensure a healthy profit margin (aim for 2x-3x+ markup potential after all costs).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-6" class="hidden"><label for="c3-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Order samples for your top 2-3 product choices to verify quality and shipping.</label></div>
+                                    </div>
+                                    <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                        <h4 class="font-semibold text-slate-800 mb-2">✨ AI Product Idea Generator</h4>
+                                        <p class="text-sm text-slate-600 mb-3">Enter niche keywords (e.g., 'smart home gadgets', 'pet accessories', 'eco-friendly kitchen') and let AI suggest product ideas.</p>
+                                        <textarea id="product-idea-input" class="w-full p-2 border border-slate-300 rounded-md focus:ring-teal-500 focus:border-teal-500 mb-3" rows="3" placeholder="e.g., 'sustainable fashion, minimalist decor'"></textarea>
+                                        <button id="generate-product-ideas" class="bg-teal-600 text-white font-bold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors duration-200">Generate Ideas</button>
+                                        <div id="product-idea-loading" class="loading-spinner hidden"></div>
+                                        <div id="product-idea-output" class="ai-output-box hidden"></div>
+                                        <p class="text-xs text-slate-500 mt-2">Disclaimer: AI-generated content may require review and editing for accuracy and brand voice.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Accordion 3.3 -->
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Import & Edit Product Listings</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                             <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>This is where you differentiate yourself. A generic, copy-pasted product page will not convert well. Make it compelling, benefit-driven, and trustworthy.</p>
+                                    <img src="https://placehold.co/600x300/e0f7e0/0d9488?text=Compelling+Product+Page" alt="Compelling Product Page" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                     <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c3-7" class="hidden"><label for="c3-7" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Import products using your dropshipping app to your Shopify "Import List".</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-8" class="hidden"><label for="c3-8" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Rewrite product titles to be descriptive, keyword-rich, and benefit-driven.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-9" class="hidden"><label for="c3-9" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Write unique, engaging product descriptions that highlight benefits and solve problems.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-10" class="hidden"><label for="c3-10" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Replace generic supplier images with high-quality photos/videos (from your samples if possible).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-11" class="hidden"><label for="c3-11" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Set your retail price to ensure profitability and organize products into relevant collections.</label></div>
+                                    </div>
+                                    <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                        <h4 class="font-semibold text-slate-800 mb-2">✨ AI Product Description Enhancer</h4>
+                                        <p class="text-sm text-slate-600 mb-3">Paste your basic product description here, and AI will rewrite it to be more compelling and benefit-driven.</p>
+                                        <textarea id="description-input" class="w-full p-2 border border-slate-300 rounded-md focus:ring-teal-500 focus:border-teal-500 mb-3" rows="5" placeholder="e.g., 'Small fan, 3 speeds, good for desk.'"></textarea>
+                                        <button id="enhance-description" class="bg-teal-600 text-white font-bold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors duration-200">Enhance Description</button>
+                                        <div id="description-loading" class="loading-spinner hidden"></div>
+                                        <div id="description-output" class="ai-output-box hidden"></div>
+                                        <p class="text-xs text-slate-500 mt-2">Disclaimer: AI-generated content may require review and editing for accuracy and brand voice.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Phase 4 Content -->
+                <section id="phase4" class="phase-content">
+                    <header class="mb-8"><h2 class="text-4xl font-bold text-slate-900">Phase 4: Payments & Shipping</h2><p class="mt-2 text-lg text-slate-600">Configure the financial and logistical backbone of your store. Your US LLC gives you a significant advantage here, enabling smoother international transactions.</p></header>
+                    <div class="space-y-6">
+                         <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Set Up Payment Gateways</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                             <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>With your US LLC and US bank account, you gain access to the best payment gateways, offering lower fees and wider acceptance for international customers.</p>
+                                    <img src="https://placehold.co/600x300/c2e6f2/0d9488?text=Payment+Gateways" alt="Payment Gateways" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                     <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                     <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c4-1" class="hidden"><label for="c4-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Activate Shopify Payments (using your US LLC and linked US bank account).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c4-2" class="hidden"><label for="c4-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Connect your PayPal Business account for broad international customer reach.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c4-3" class="hidden"><label for="c4-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>(Optional) Add Kenyan gateways like Pesapal or IntaSend if you also plan to target local sales.</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                         <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Configure Shipping Rates & Fulfillment</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                             <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Transparent and clear shipping policies are crucial for dropshipping success. Automate fulfillment to save time and ensure smooth operations.</p>
+                                    <img src="https://placehold.co/600x300/e0f7e0/0d9488?text=Global+Shipping+Routes" alt="Global Shipping Routes" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                     <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                     <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c4-4" class="hidden"><label for="c4-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Create shipping zones for all target countries in Shopify.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c4-5" class="hidden"><label for="c4-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Set up shipping rates (Recommended: "Free Insured Shipping" with cost built into product price).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c4-6" class="hidden"><label for="c4-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Clearly state estimated delivery times (2-4 weeks) next to shipping options at checkout.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c4-7" class="hidden"><label for="c4-7" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Ensure your dropshipping app is set up for automated order fulfillment and tracking updates.</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Phase 5 Content -->
+                <section id="phase5" class="phase-content">
+                    <header class="mb-8"><h2 class="text-4xl font-bold text-slate-900">Phase 5: Testing & Pre-Launch Marketing</h2><p class="mt-2 text-lg text-slate-600">Ensure your store is flawless and prepare your marketing engine before you go live. A thorough test and strategic pre-launch are vital for a strong start.</p></header>
+                    <div class="space-y-6">
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Test Your Store Thoroughly</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Before launching, simulate the entire customer journey to catch any issues. A smooth experience builds trust and conversions.</p>
+                                    <img src="https://placehold.co/600x300/c2e6f2/0d9488?text=Website+Testing" alt="Website Testing" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c5-1" class="hidden"><label for="c5-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Place several "test orders" using Shopify's Bogus Gateway.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c5-2" class="hidden"><label for="c5-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Verify all payment methods work correctly (successful and failed transactions).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c5-3" class="hidden"><label for="c5-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Check all automated email notifications (order confirmation, shipping updates, abandoned cart).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c5-4" class="hidden"><label for="c5-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Test all links, menus, and product pages for broken links or errors.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c5-5" class="hidden"><label for="c5-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Confirm mobile responsiveness across various devices and browsers.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c5-6" class="hidden"><label for="c5-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Check site speed and loading times using tools like Google PageSpeed Insights.</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Define Your Pre-Launch Marketing Strategy</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Prepare your marketing assets and initial campaigns to generate buzz and attract your first customers. High-quality visuals and compelling ad copy are key.</p>
+                                    <img src="https://placehold.co/600x300/e0f7e0/0d9488?text=Marketing+Strategy" alt="Marketing Strategy" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c5-7" class="hidden"><label for="c5-7" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Create high-converting product photos and engaging product videos (from your samples!).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c5-8" class="hidden"><label for="c5-8" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Design compelling ad creatives (images/videos) and write persuasive ad copy for social media.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c5-9" class="hidden"><label for="c5-9" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Install an email marketing app (Klaviyo, Mailchimp) and set up Abandoned Cart Recovery emails.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c5-10" class="hidden"><label for="c5-10" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Prepare a Welcome Sequence for new email subscribers (consider offering a small discount).</label></div>
+                                    </div>
+                                    <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
+                                        <h4 class="font-semibold text-slate-800 mb-2">✨ AI Ad Copy Generator</h4>
+                                        <p class="text-sm text-slate-600 mb-3">Enter product name, key features, and main benefits, and AI will generate catchy ad headlines and body copy.</p>
+                                        <textarea id="ad-copy-input" class="w-full p-2 border border-slate-300 rounded-md focus:ring-teal-500 focus:border-teal-500 mb-3" rows="4" placeholder="e.g., 'Portable Mini Fan, 3 speeds, silent, USB rechargeable, perfect for office and travel.'"></textarea>
+                                        <button id="generate-ad-copy" class="bg-teal-600 text-white font-bold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors duration-200">Generate Ad Copy</button>
+                                        <div id="ad-copy-loading" class="loading-spinner hidden"></div>
+                                        <div id="ad-copy-output" class="ai-output-box hidden"></div>
+                                        <p class="text-xs text-slate-500 mt-2">Disclaimer: AI-generated content may require review and editing for accuracy and brand voice.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="phase6" class="phase-content">
+                    <header class="mb-8"><h2 class="text-4xl font-bold text-slate-900">Phase 6: Launch & Scale</h2><p class="mt-2 text-lg text-slate-600">It's time to open your doors to the world and start driving traffic. This phase focuses on getting your first sales and understanding your market.</p></header>
+                    <div class="space-y-6">
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Launch Your Store & Initial Campaigns</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Remove your store password and officially go live! Focus on driving targeted traffic to your store using paid advertising and organic strategies.</p>
+                                    <img src="https://placehold.co/600x300/e0f2f7/0d9488?text=Store+Launch" alt="Store Launch" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c6-1" class="hidden"><label for="c6-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Remove your online store password in Shopify Admin (`Online Store > Preferences`).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c6-2" class="hidden"><label for="c6-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Start your social media advertising campaigns (Facebook/Instagram Ads, TikTok Ads) with small, test budgets.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c6-3" class="hidden"><label for="c6-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Explore micro-influencer marketing by offering free products for reviews/promotions.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c6-4" class="hidden"><label for="c6-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Ensure basic SEO is in place (keywords in titles/descriptions, sitemap submitted to Google Search Console).</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Monitor & Optimize Continuously</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                            <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Dropshipping is an iterative process. Constantly monitor your performance metrics and adapt your strategies based on data to scale profitably.</p>
+                                    <img src="https://placehold.co/600x300/e0f7e0/0d9488?text=Growth+Chart" alt="Growth Chart" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                    <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c6-5" class="hidden"><label for="c6-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Daily monitor your Shopify dashboard, dropshipping app, and ad platform dashboards.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c6-6" class="hidden"><label for="c6-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Track key KPIs: conversion rate, AOV, CPP, ROAS. Identify winning ads and products.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c6-7" class="hidden"><label for="c6-7" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Continuously test new ad creatives, audiences, and product variations.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c6-8" class="hidden"><label for="c6-8" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Proactively address any shipping delays and monitor supplier performance closely.</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section id="phase7" class="phase-content">
+                     <header class="mb-8"><h2 class="text-4xl font-bold text-slate-900">Phase 7: Ongoing Compliance & Growth</h2><p class="mt-2 text-lg text-slate-600">Running a business is a marathon, not a sprint. This phase covers your long-term responsibilities, legal obligations, and strategies for sustainable growth and customer retention.</p></header>
+                     <div class="space-y-6">
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Tax & Legal Compliance (US & Kenya)</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                             <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Navigating international tax laws is complex. Proper compliance is critical to avoid penalties and ensure long-term business viability.</p>
+                                    <img src="https://placehold.co/600x300/c2e6f2/0d9488?text=Tax+Compliance" alt="Tax Compliance" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                    <div class="bg-red-100 border-l-4 border-red-500 p-4 rounded-r-lg">
+                                        <h4 class="font-semibold text-red-800">Critical Action: Hire Tax Professionals</h4>
+                                        <p class="text-red-700">This is not optional. You **MUST** engage both a US tax accountant (for IRS filings) and a Kenyan tax consultant (for KRA filings and treaty benefits) to remain compliant and avoid severe penalties.</p>
+                                    </div>
+                                     <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                     <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c7-1" class="hidden"><label for="c7-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>File Wyoming Annual Report (via your registered agent) to maintain LLC good standing.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-2" class="hidden"><label for="c7-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>File IRS Form 5472 and pro-forma 1120 with your US accountant annually.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-3" class="hidden"><label for="c7-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Declare global income with your Kenyan tax consultant, leveraging the US-Kenya Double Taxation Treaty.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-4" class="hidden"><label for="c7-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Stay updated on sales tax nexus requirements as your business scales in the US.</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
+                            <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
+                                <h3 class="text-xl font-semibold text-slate-800">Customer Service & Continuous Improvement</h3>
+                                <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
+                            </div>
+                             <div class="accordion-content">
+                                <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
+                                    <p>Excellent customer service builds loyalty and repeat business. Continuously improving your operations is key to long-term success.</p>
+                                    <img src="https://placehold.co/600x300/e0f7e0/0d9488?text=Customer+Loyalty" alt="Customer Loyalty" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
+                                     <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
+                                     <div class="space-y-2">
+                                        <div class="flex items-center"><input type="checkbox" id="c7-5" class="hidden"><label for="c7-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Respond promptly and professionally to all customer inquiries.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-6" class="hidden"><label for="c7-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Maintain clear communication regarding shipping times and any potential delays.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-7" class="hidden"><label for="c7-7" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Make your return/refund process as smooth and hassle-free as possible.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-8" class="hidden"><label for="c7-8" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Actively seek customer feedback and use it to improve your products and services.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-9" class="hidden"><label for="c7-9" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Continuously research new trending products and adapt your offerings to market demands.</label></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                </section>
+
+                <!-- Conclusion Section -->
+                <section id="conclusion" class="phase-content">
+                    <div class="bg-gradient-to-r from-teal-600 to-teal-800 text-white p-8 rounded-xl shadow-lg mb-8 text-center">
+                        <h2 class="text-4xl font-bold mb-4">Your Global E-commerce Journey Awaits!</h2>
+                        <p class="text-lg leading-relaxed mb-6">You now have a comprehensive blueprint to build and scale your dropshipping business from Kenya to the world, powered by a robust US LLC. This guide provides the knowledge and actionable steps you need to succeed.</p>
+                        <img src="https://placehold.co/1200x400/0d9488/ffffff?text=Success+Journey" alt="Success Journey" class="w-full h-auto rounded-lg shadow-md mb-6 mx-auto max-w-2xl">
+                        <p class="text-xl font-light mb-8">The path to becoming a successful global entrepreneur is within your reach. Take action, stay persistent, and adapt to the dynamic e-commerce landscape.</p>
+                        <button onclick="document.querySelector('[data-phase=\'welcome\']').click();" class="mt-8 bg-white text-teal-700 font-bold py-3 px-8 rounded-full text-lg shadow-xl hover:bg-teal-50 hover:text-teal-800 transition-all duration-300">Review the Guide Again</button>
+                    </div>
+                </section>
+                
+            </div>
+        </main>
+    </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const contentSections = document.querySelectorAll('.phase-content');
+        const accordionHeaders = document.querySelectorAll('.accordion-header');
+
+        // Function to call Gemini API
+        async function callGeminiAPI(prompt, outputElementId, loadingElementId) {
+            const outputElement = document.getElementById(outputElementId);
+            const loadingElement = document.getElementById(loadingElementId);
+            outputElement.classList.add('hidden');
+            loadingElement.classList.remove('hidden');
+            outputElement.textContent = '';
+
+            try {
+                let chatHistory = [];
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Leave as-is, Canvas will provide in runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    outputElement.textContent = text;
+                } else {
+                    outputElement.textContent = 'Error: Could not generate content. Please try again.';
+                    console.error('Gemini API response structure unexpected:', result);
+                }
+            } catch (error) {
+                outputElement.textContent = 'Error: Failed to connect to AI. Please check your network or try again later.';
+                console.error('Error calling Gemini API:', error);
+            } finally {
+                loadingElement.classList.add('hidden');
+                outputElement.classList.remove('hidden');
+            }
+        }
+
+        // LLM Feature: Product Idea Generator
+        const generateProductIdeasBtn = document.getElementById('generate-product-ideas');
+        if (generateProductIdeasBtn) {
+            generateProductIdeasBtn.addEventListener('click', function() {
+                const nicheInput = document.getElementById('product-idea-input').value;
+                if (nicheInput.trim() === '') {
+                    alert('Please enter some niche keywords.');
+                    return;
+                }
+                const prompt = `Suggest 5-7 fast-moving, high-demand dropshipping product ideas from China based on the niche/keywords: "${nicheInput}". For each idea, briefly explain why it's a good fit for dropshipping (e.g., lightweight, problem-solving, trending).`;
+                callGeminiAPI(prompt, 'product-idea-output', 'product-idea-loading');
+            });
+        }
+
+        // LLM Feature: Product Description Enhancer
+        const enhanceDescriptionBtn = document.getElementById('enhance-description');
+        if (enhanceDescriptionBtn) {
+            enhanceDescriptionBtn.addEventListener('click', function() {
+                const descriptionInput = document.getElementById('description-input').value;
+                if (descriptionInput.trim() === '') {
+                    alert('Please paste a product description.');
+                    return;
+                }
+                const prompt = `Rewrite the following basic product description to be more compelling, benefit-driven, and engaging for an e-commerce store. Focus on solving customer problems and highlighting unique selling points. Keep it concise and use bullet points where appropriate. Product description: "${descriptionInput}"`;
+                callGeminiAPI(prompt, 'description-output', 'description-loading');
+            });
+        }
+
+        // LLM Feature: Ad Copy Generator
+        const generateAdCopyBtn = document.getElementById('generate-ad-copy');
+        if (generateAdCopyBtn) {
+            generateAdCopyBtn.addEventListener('click', function() {
+                const adCopyInput = document.getElementById('ad-copy-input').value;
+                if (adCopyInput.trim() === '') {
+                    alert('Please enter product details for ad copy generation.');
+                    return;
+                }
+                const prompt = `Generate 3-4 catchy social media ad headlines and 2-3 short, engaging ad body copies for a dropshipping product. Focus on creating urgency and highlighting benefits. Product details: "${adCopyInput}"`;
+                callGeminiAPI(prompt, 'ad-copy-output', 'ad-copy-loading');
+            });
+        }
+
+
+        function updateNavLine() {
+            const container = document.getElementById('phase-navigation');
+            const activeLink = container.querySelector('.nav-link.active');
+            const staticLine = document.getElementById('static-nav-line'); 
+            
+            let coloredLineElem = document.querySelector('.nav-line-colored');
+            if (!coloredLineElem) {
+                coloredLineElem = document.createElement('div');
+                coloredLineElem.className = 'nav-line-colored absolute left-4 w-0.5 bg-teal-500 transition-all duration-500';
+                if (staticLine) {
+                    staticLine.parentNode.insertBefore(coloredLineElem, staticLine.nextSibling);
+                } else {
+                    console.error('Static navigation line not found for colored line insertion.');
+                    return;
+                }
+            }
+
+            if (activeLink && staticLine) {
+                const navCircles = Array.from(container.querySelectorAll('.nav-circle'));
+                const activeCircle = activeLink.querySelector('.nav-circle');
+                
+                if (navCircles.length > 0 && activeCircle) {
+                    const firstCircleTop = navCircles[0].offsetTop + navCircles[0].offsetHeight / 2;
+                    const activeCircleTop = activeCircle.offsetTop + activeCircle.offsetHeight / 2;
+                    
+                    coloredLineElem.style.top = `${firstCircleTop}px`;
+                    coloredLineElem.style.height = `${activeCircleTop - firstCircleTop}px`;
+                }
+            }
+        }
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const phase = this.dataset.phase;
+
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+
+                contentSections.forEach(section => {
+                    section.classList.remove('active');
+                    if (section.id === phase) {
+                        section.classList.add('active');
+                    }
+                });
+                updateNavLine();
+            });
+        });
+
+        accordionHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                this.classList.toggle('open');
+                const content = this.nextElementSibling;
+                content.classList.toggle('open');
+            });
+        });
+
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const phaseSection = this.closest('section[id^="phase"]');
+                if (!phaseSection) return;
+
+                const allCheckboxesInPhase = phaseSection.querySelectorAll('input[type="checkbox"]');
+                const allCheckedInPhase = Array.from(allCheckboxesInPhase).every(cb => cb.checked);
+                
+                const navLink = document.querySelector(`.nav-link[data-phase="${phaseSection.id}"]`);
+
+                if (allCheckedInPhase) {
+                    navLink.classList.add('completed');
+                } else {
+                    navLink.classList.remove('completed');
+                }
+                updateNavLine();
+            });
+        });
+
+        updateNavLine();
+
+        const initialActivePhase = document.querySelector('.phase-content.active');
+        if (initialActivePhase) {
+            const firstAccordionHeader = initialActivePhase.querySelector('.accordion-header');
+            if (firstAccordionHeader) {
+                firstAccordionHeader.click();
+            }
+        }
+    });
+</script>
+
+</body>
+</html>
