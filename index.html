@@ -18,7 +18,9 @@
         .nav-link.completed .nav-circle { background-color: #0d9488; border-color: #0d9488; color: white; }
         .nav-link.active .nav-text, .nav-link.completed .nav-text { font-weight: 600; }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
-        .accordion-content.open { max-height: 2000px; } /* Adjust as needed */
+        .accordion-content.open { max-height: 12000px; }
+        .state-choice[aria-pressed="true"] { background: #0f766e; color: white; border-color: #0f766e; }
+        [data-state-panel][hidden] { display: none; }
         .accordion-arrow { transition: transform 0.3s ease-in-out; }
         .accordion-header.open .accordion-arrow { transform: rotate(90deg); }
         input[type="checkbox"]:checked + label .checkbox-icon {
@@ -138,17 +140,18 @@
                 <section id="welcome" class="phase-content active">
                     <div class="bg-gradient-to-r from-teal-600 to-teal-800 text-white p-8 rounded-xl shadow-lg mb-8 text-center">
                         <h2 class="text-5xl font-extrabold mb-4">Unlock Your Global E-commerce Empire!</h2>
-                        <p class="text-xl font-light mb-6">The Definitive Dropshipping Blueprint: From Kenya to the World with a US LLC.</p>
+                        <p class="text-xl font-light mb-6">A dropshipping field guide: from Kenya to customers abroad, with or without a US LLC.</p>
                         <img src="assets/images/global-commerce.jpg" alt="Container ship being unloaded at a port" class="w-full h-auto rounded-lg shadow-md mb-6 mx-auto max-w-2xl">
-                        <p class="text-lg leading-relaxed">This interactive guide is your all-in-one resource to build a thriving dropshipping business, leveraging the power of a US Limited Liability Company (LLC) to streamline international payments and build unparalleled trust. We'll walk you through every step, from legal setup to scaling your sales.</p>
+                        <p class="text-lg leading-relaxed">A practical record of what it takes to test a dropshipping business from Kenya: choosing whether and where to form a US LLC, checking payment eligibility, finding suppliers, launching a store, and keeping up with filings. An LLC does not guarantee a bank account, payment processor, or profit.</p>
+                        <p class="mt-4 text-sm text-teal-100">Reviewed 17 October 2026. Fees and platform rules can change; follow the linked official sources before filing or paying.</p>
                         <button onclick="document.querySelector('[data-phase=\'phase1\']').click();" class="mt-8 bg-white text-teal-700 font-bold py-3 px-8 rounded-full text-lg shadow-xl hover:bg-teal-50 hover:text-teal-800 transition-all duration-300">Start Your Journey Now!</button>
                     </div>
 
                     <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 space-y-4">
                         <h3 class="text-2xl font-bold text-slate-900">What You'll Achieve with This Guide:</h3>
                         <ul class="list-disc list-inside text-slate-700 space-y-2">
-                            <li><strong>Establish a Solid Legal Foundation:</strong> Set up a US LLC for credibility and liability protection.</li>
-                            <li><strong>Master Global Payments:</strong> Access top-tier US payment gateways for seamless international transactions.</li>
+                            <li><strong>Decide whether to form:</strong> Compare Wyoming, Delaware, and the state where you actually operate before spending money.</li>
+                            <li><strong>Check payments first:</strong> Confirm current identity, address, banking, and country requirements with each provider.</li>
                             <li><strong>Build a High-Converting Store:</strong> Design a professional Shopify storefront that attracts and retains customers.</li>
                             <li><strong>Source Winning Products:</strong> Discover fast-moving, high-demand items directly from China.</li>
                             <li><strong>Streamline Operations:</strong> Automate order fulfillment and shipping for efficiency.</li>
@@ -165,46 +168,66 @@
                 <section id="phase1" class="phase-content">
                     <header class="mb-8">
                         <h2 class="text-4xl font-bold text-slate-900">Phase 1: Foundational Setup</h2>
-                        <p class="mt-2 text-lg text-slate-600">This is the most critical phase. Setting up your US legal and banking structure correctly is paramount for international success. Start this immediately as it takes 4-8 weeks.</p>
+                        <p class="mt-2 text-lg text-slate-600">Validate the business and payment route before paying to form an entity. Formation, EIN, banking, and verification have separate timelines.</p>
                     </header>
                     <div class="space-y-6">
                         <!-- Accordion 1.1 -->
                         <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
                             <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
-                                <h3 class="text-xl font-semibold text-slate-800">Form Your US LLC (Wyoming Recommended)</h3>
+                                <h3 class="text-xl font-semibold text-slate-800">Choose a state, then decide whether to form</h3>
                                 <span class="accordion-arrow text-teal-600 text-2xl font-bold">&#x276F;</span>
                             </div>
                             <div class="accordion-content">
                                 <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
-                                    <p>A US LLC enhances credibility, gives access to better payment processors, and provides liability protection. Wyoming is the top choice for non-residents due to strong privacy laws, low fees, and no state income tax.</p>
+                                    <p>A US LLC can separate a business from its owner, but protection depends on how it is run and applicable law. It can add tax, agent, and annual fees before you have a sale. If you will operate in a particular US state, forming elsewhere may mean registering there too. Compare the total cost and obligations, not just the filing fee. <a class="text-teal-700 underline" href="https://www.sba.gov/business-guide/launch-your-business/register-your-business" target="_blank" rel="noopener noreferrer">SBA registration guide</a>.</p>
                                     <img src="assets/images/llc-formation.png" alt="Wyoming Secretary of State start-a-business page" loading="lazy" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
-                                    <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
-                                        <h4 class="font-semibold text-teal-800">Action: Engage an LLC Formation Service</h4>
-                                        <p class="text-teal-700">These services are essential for non-residents. They handle the complex legal filings, act as your required Registered Agent, and guide you through the process, including obtaining your EIN.</p>
+                                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-5 space-y-4">
+                                        <h4 class="font-semibold text-slate-900">Compare formation states</h4>
+                                        <p class="text-sm">State fees below exclude registered-agent, expedited, bank, and professional costs. Select a state for its filing path and recurring obligation.</p>
+                                        <div class="flex flex-wrap gap-2" role="group" aria-label="Compare LLC formation states">
+                                            <button type="button" class="state-choice border border-slate-300 rounded-full px-4 py-2 font-semibold" data-llc-state="wyoming" aria-pressed="true">Wyoming</button>
+                                            <button type="button" class="state-choice border border-slate-300 rounded-full px-4 py-2 font-semibold" data-llc-state="delaware" aria-pressed="false">Delaware</button>
+                                            <button type="button" class="state-choice border border-slate-300 rounded-full px-4 py-2 font-semibold" data-llc-state="other" aria-pressed="false">Another state</button>
+                                        </div>
+                                        <div data-state-panel="wyoming">
+                                            <p><strong>Wyoming:</strong> $100 state filing fee for articles of organization. The annual report/license tax is due on the first day of the anniversary month; the minimum is $60, or $0.0002 per dollar of Wyoming assets if higher. A Wyoming registered agent is required. <a class="text-teal-700 underline" href="https://sos.wyo.gov/Forms/Business/LLC/LLC-ArticlesOrganization.pdf" target="_blank" rel="noopener noreferrer">Formation form</a> · <a class="text-teal-700 underline" href="https://sos.wyo.gov/FAQS.aspx?root=BUS" target="_blank" rel="noopener noreferrer">Annual report rules</a>.</p>
+                                            <p class="mt-2 text-sm">Consider it when you have no stronger operating-state reason. Low state fees do not eliminate federal or Kenyan tax questions.</p>
+                                        </div>
+                                        <div data-state-panel="delaware" hidden>
+                                            <p><strong>Delaware:</strong> $110 certificate-of-formation fee and $400 annual LLC tax, due by June 1 after the formation year. Delaware LLCs do not file a state annual report, but need a Delaware registered agent. <a class="text-teal-700 underline" href="https://corpfiles.delaware.gov/LLC_Forms/LLC%20Formation.pdf" target="_blank" rel="noopener noreferrer">2026 formation instructions</a> · <a class="text-teal-700 underline" href="https://corp.delaware.gov/alt-entitytaxinstructions/" target="_blank" rel="noopener noreferrer">Annual tax rules</a>.</p>
+                                            <p class="mt-2 text-sm">Delaware may suit a business with a specific legal or investor reason to form there. For a small store, price the recurring $400 tax and agent before deciding. Older pages may still show the former $300 tax.</p>
+                                        </div>
+                                        <div data-state-panel="other" hidden>
+                                            <p><strong>Another state:</strong> If you will have people, inventory, an office, or sustained operations in a US state, start with that state's rules. Forming in Wyoming or Delaware may not replace registration where you actually operate. Compare filing, foreign-registration, agent, annual-report, and tax costs. Use the <a class="text-teal-700 underline" href="https://www.sba.gov/business-guide/launch-your-business/register-your-business" target="_blank" rel="noopener noreferrer">SBA guide</a> and the relevant secretary of state's site.</p>
+                                        </div>
                                     </div>
-                                    <h4 class="font-semibold text-slate-800 pt-4">Recommended Services:</h4>
+                                    <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
+                                        <h4 class="font-semibold text-teal-800">Filing path</h4>
+                                        <p class="text-teal-700">Check the business name and appoint an in-state registered agent. File directly with the state or pay a formation service; a service is optional. Keep the approved formation document and write an operating agreement. Then request an EIN from the IRS for free. International applicants may need the phone, fax, or mail route rather than the online application. <a class="underline" href="https://www.irs.gov/businesses/employer-identification-number" target="_blank" rel="noopener noreferrer">IRS EIN instructions</a>.</p>
+                                    </div>
+                                    <h4 class="font-semibold text-slate-800 pt-4">Optional service examples (not endorsements):</h4>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
                                             <h5 class="font-bold text-slate-900">Doola.com</h5>
-                                            <p class="text-sm text-slate-600 mb-2">Highly recommended for non-US residents. Comprehensive packages for formation, EIN, and banking assistance.</p>
+                                            <p class="text-sm text-slate-600 mb-2">Compare current pricing, agent renewal, EIN help, and cancellation terms against filing directly.</p>
                                             <a href="https://www.doola.com/" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Visit Website &rarr;</a>
                                         </div>
                                         <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
                                             <h5 class="font-bold text-slate-900">Northwest Registered Agent</h5>
-                                            <p class="text-sm text-slate-600 mb-2">Known for excellent customer service and strong privacy features, making them a reliable choice.</p>
+                                            <p class="text-sm text-slate-600 mb-2">Compare its registered-agent fee and filing support with state fees and other providers.</p>
                                             <a href="https://www.northwestregisteredagent.com/" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Visit Website &rarr;</a>
                                         </div>
                                     </div>
                                     <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
                                     <div class="space-y-2">
                                         <div class="flex items-center">
-                                            <input type="checkbox" id="c1-1" class="hidden"><label for="c1-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Choose and engage an LLC formation service.</label>
+                                            <input type="checkbox" id="c1-1" class="hidden"><label for="c1-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Write down why a US entity is needed and compare at least two state options.</label>
                                         </div>
                                         <div class="flex items-center">
-                                            <input type="checkbox" id="c1-2" class="hidden"><label for="c1-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Provide required documents (passport, etc.) to the service.</label>
+                                            <input type="checkbox" id="c1-2" class="hidden"><label for="c1-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Check name availability, select a registered agent, file with the state, and keep the approval.</label>
                                         </div>
                                          <div class="flex items-center">
-                                            <input type="checkbox" id="c1-3" class="hidden"><label for="c1-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Wait for LLC approval and EIN confirmation (this can take 4-8 weeks).</label>
+                                            <input type="checkbox" id="c1-3" class="hidden"><label for="c1-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Prepare an operating agreement, request the EIN directly from the IRS, and record annual deadlines.</label>
                                         </div>
                                     </div>
                                 </div>
@@ -218,22 +241,22 @@
                             </div>
                              <div class="accordion-content">
                                 <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
-                                    <p>A US bank account is essential for using US payment processors like Shopify Payments and Stripe, separating finances, and appearing professional. It must be done after your LLC is formed and you have your EIN.</p>
+                                    <p>Keep business and personal money separate. A US LLC and EIN do not guarantee banking approval: providers verify identity, ownership, business activity, address, and country eligibility. A registered-agent address is not necessarily an acceptable operating address. Check account and payout requirements before paying to form.</p>
                                     <img src="assets/images/business-banking.png" alt="Consumer Financial Protection Bureau page about bank accounts" loading="lazy" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
                                     <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
-                                        <h4 class="font-semibold text-teal-800">Action: Apply to an Online Bank Remotely</h4>
-                                        <p class="text-teal-700">Traditional banks often require an in-person visit. Fintech banks are designed for remote, non-resident founders, making this step much easier.</p>
+                                        <h4 class="font-semibold text-teal-800">Action: Check eligibility before applying</h4>
+                                        <p class="text-teal-700">Ask each provider whether it accepts a Kenyan-resident owner, your actual operating address, your business model, and the payout currency you need. Approval and account features vary.</p>
                                     </div>
-                                    <h4 class="font-semibold text-slate-800 pt-4">Top Recommended Online Banks:</h4>
+                                    <h4 class="font-semibold text-slate-800 pt-4">Providers to compare:</h4>
                                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                         <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
                                             <h5 class="font-bold text-slate-900">Mercury.com</h5>
-                                            <p class="text-sm text-slate-600 mb-2">Top-rated for startups and non-resident LLCs. Fully online application, no minimum balance, and excellent integrations.</p>
+                                            <p class="text-sm text-slate-600 mb-2">Check current owner-residency, business-address, and entity requirements before applying.</p>
                                             <a href="https://mercury.com/" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Visit Website &rarr;</a>
                                         </div>
                                         <div class="resource-card bg-slate-50 rounded-lg p-4 border border-slate-200">
                                             <h5 class="font-bold text-slate-900">Wise Business</h5>
-                                            <p class="text-sm text-slate-600 mb-2">Provides US account details for receiving USD. Excellent for international transfers with competitive exchange rates.</p>
+                                            <p class="text-sm text-slate-600 mb-2">Check whether your entity and country can open the business account and whether its account details meet processor payout rules.</p>
                                             <a href="https://wise.com/business/" target="_blank" class="text-sm font-semibold text-teal-600 hover:text-teal-700">Visit Website &rarr;</a>
                                         </div>
                                     </div>
@@ -243,10 +266,10 @@
                                             <input type="checkbox" id="c1-4" class="hidden"><label for="c1-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Gather documents: LLC formation certificate, EIN letter, Passport.</label>
                                         </div>
                                         <div class="flex items-center">
-                                            <input type="checkbox" id="c1-5" class="hidden"><label for="c1-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Complete the online application for your chosen bank.</label>
+                                            <input type="checkbox" id="c1-5" class="hidden"><label for="c1-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Check the provider's current eligibility rules and complete its verification honestly.</label>
                                         </div>
                                          <div class="flex items-center">
-                                            <input type="checkbox" id="c1-6" class="hidden"><label for="c1-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Link your new US bank account for future payouts from payment processors.</label>
+                                            <input type="checkbox" id="c1-6" class="hidden"><label for="c1-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Once approved, verify whether the account supports your chosen processor's payouts.</label>
                                         </div>
                                     </div>
                                 </div>
@@ -259,7 +282,7 @@
                 <section id="phase2" class="phase-content">
                     <header class="mb-8">
                         <h2 class="text-4xl font-bold text-slate-900">Phase 2: Shopify Store Core Setup</h2>
-                        <p class="mt-2 text-lg text-slate-600">With the legal framework underway, it's time to build your digital storefront. This phase covers creating the core of your e-commerce presence, focusing on a high-converting design.</p>
+                        <p class="mt-2 text-lg text-slate-600">Build a small store around a tested offer. You can draft it while you decide whether an LLC is necessary.</p>
                     </header>
                      <div class="space-y-6">
                         <!-- Accordion 2.1 -->
@@ -270,7 +293,7 @@
                             </div>
                             <div class="accordion-content">
                                 <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
-                                    <p>This is the initial step in creating your online store. Setting the currency to USD is a critical step for international sales, minimizing conversion fees.</p>
+                                    <p>Choose your selling market, billing currency, and payout route together. A USD storefront does not by itself remove currency-conversion fees.</p>
                                     <img src="assets/images/shopify-admin.png" alt="Shopify Help Center page about the store admin" loading="lazy" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
                                     <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
                                     <div class="space-y-2">
@@ -278,10 +301,10 @@
                                             <input type="checkbox" id="c2-1" class="hidden"><label for="c2-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Sign up for a Shopify free trial.</label>
                                         </div>
                                         <div class="flex items-center">
-                                            <input type="checkbox" id="c2-2" class="hidden"><label for="c2-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Set primary store currency to USD in `Settings > Store details` to avoid conversion losses.</label>
+                                            <input type="checkbox" id="c2-2" class="hidden"><label for="c2-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Choose store currency after checking customer markets, payout currency, and conversion fees.</label>
                                         </div>
                                          <div class="flex items-center">
-                                            <input type="checkbox" id="c2-3" class="hidden"><label for="c2-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Select the 'Basic Shopify' plan as it's sufficient for starting dropshipping.</label>
+                                            <input type="checkbox" id="c2-3" class="hidden"><label for="c2-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Compare current Shopify plans and app fees before selecting a paid plan.</label>
                                         </div>
                                     </div>
                                 </div>
@@ -323,7 +346,7 @@
                             </div>
                              <div class="accordion-content">
                                 <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
-                                    <p>Transparency builds trust. These pages are non-negotiable for any serious e-commerce store. Use Shopify's templates in `Settings > Policies` as a starting point, but customize them to reflect your specific business model.</p>
+                                    <p>Use clear contact, shipping, refund, privacy, and terms pages. Shopify's policy templates are a starting point, not a substitute for checking rules in the markets you sell to. <a class="text-teal-700 underline" href="https://help.shopify.com/en/manual/checkout-settings/refund-privacy-tos" target="_blank" rel="noopener noreferrer">Shopify policy guidance</a>.</p>
                                     <img src="assets/images/store-policies.png" alt="Shopify Help Center page about store policies" loading="lazy" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
                                     <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
                                      <div class="space-y-2">
@@ -345,7 +368,7 @@
                 <section id="phase3" class="phase-content">
                     <header class="mb-8">
                         <h2 class="text-4xl font-bold text-slate-900">Phase 3: Product Sourcing & Importation</h2>
-                        <p class="mt-2 text-lg text-slate-600">This is the heart of your dropshipping business. Finding winning products and presenting them professionally is key to making sales and building a sustainable brand.</p>
+                        <p class="mt-2 text-lg text-slate-600">Test quality, supplier reliability, real delivery times, and the landed cost before listing a product.</p>
                     </header>
                     <div class="space-y-6">
                         <!-- Accordion 3.1 -->
@@ -401,18 +424,18 @@
                             </div>
                              <div class="accordion-content">
                                 <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
-                                    <p>Your product choice is paramount. Look for items that solve a problem, have a "wow" factor, and aren't easily found in local stores. Focus on fast-moving consumer goods (FMCG) with consistent demand.</p>
+                                    <p>Start with a product whose use, safety requirements, sourcing, and returns you can explain. Check demand, competition, restrictions, and whether the numbers still work after ads, shipping, duties, refunds, and chargebacks.</p>
                                     <img src="assets/images/product-research.png" alt="Shopify article about product research methods" loading="lazy" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
                                     <div class="bg-teal-50 border-l-4 border-teal-500 p-4 rounded-r-lg">
                                         <h4 class="font-semibold text-teal-800">Critical Step: Order Samples!</h4>
-                                        <p class="text-teal-700">Do not skip this. Ordering samples to Kenya lets you verify quality, check real shipping times, and create unique, authentic photos/videos for your marketing. This builds immense trust.</p>
+                                        <p class="text-teal-700">Order a sample to a destination similar to your customers' location. A sample shipped to Kenya cannot establish delivery times to the US or EU. Keep your own photos and notes.</p>
                                     </div>
                                      <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
                                      <div class="space-y-2">
                                         <div class="flex items-center"><input type="checkbox" id="c3-3" class="hidden"><label for="c3-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Use research tools (TikTok, Google Trends, Amazon Best Sellers, etc.) to identify potential winning products.</label></div>
-                                        <div class="flex items-center"><input type="checkbox" id="c3-4" class="hidden"><label for="c3-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Vet suppliers on AliExpress/CJdropshipping for high ratings (4.7+), numerous orders, and reliable shipping options (e.g., ePacket).</label></div>
-                                        <div class="flex items-center"><input type="checkbox" id="c3-5" class="hidden"><label for="c3-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Ensure a healthy profit margin (aim for 2x-3x+ markup potential after all costs).</label></div>
-                                        <div class="flex items-center"><input type="checkbox" id="c3-6" class="hidden"><label for="c3-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Order samples for your top 2-3 product choices to verify quality and shipping.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-4" class="hidden"><label for="c3-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Order a sample; verify quality, tracking, actual delivery time, return address, and product-safety obligations.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-5" class="hidden"><label for="c3-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Calculate contribution margin per order: price minus product, shipping, duties, processor, ads, expected refunds, and support costs.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c3-6" class="hidden"><label for="c3-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Request written supplier terms for stock changes, defects, returns, and failed deliveries.</label></div>
                                     </div>
                                     <div class="mt-6 p-4 bg-slate-50 rounded-lg border border-slate-200">
                                         <h4 class="font-semibold text-slate-800 mb-2">✨ AI Product Idea Generator</h4>
@@ -461,7 +484,7 @@
                 
                 <!-- Phase 4 Content -->
                 <section id="phase4" class="phase-content">
-                    <header class="mb-8"><h2 class="text-4xl font-bold text-slate-900">Phase 4: Payments & Shipping</h2><p class="mt-2 text-lg text-slate-600">Configure the financial and logistical backbone of your store. Your US LLC gives you a significant advantage here, enabling smoother international transactions.</p></header>
+                    <header class="mb-8"><h2 class="text-4xl font-bold text-slate-900">Phase 4: Payments & Shipping</h2><p class="mt-2 text-lg text-slate-600">Verify the payment route and delivery promise before accepting orders. Neither is settled by forming an LLC.</p></header>
                     <div class="space-y-6">
                          <div class="accordion-item bg-white rounded-xl shadow-sm border border-slate-200">
                             <div class="accordion-header p-6 cursor-pointer flex justify-between items-center">
@@ -470,11 +493,11 @@
                             </div>
                              <div class="accordion-content">
                                 <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
-                                    <p>With your US LLC and US bank account, you gain access to the best payment gateways, offering lower fees and wider acceptance for international customers.</p>
+                                    <p>Payment activation is a separate review. Shopify Payments US and Stripe may ask for an EIN, owner identity, real business address, eligible payout account, product details, and further verification. Having an LLC and bank account alone is not approval. <a class="text-teal-700 underline" href="https://help.shopify.com/en/manual/payments/shopify-payments/supported-countries/united-states/requirements" target="_blank" rel="noopener noreferrer">Shopify US requirements</a> · <a class="text-teal-700 underline" href="https://support.stripe.com/questions/requirements-to-open-a-stripe-account-in-another-country" target="_blank" rel="noopener noreferrer">Stripe cross-border requirements</a>.</p>
                                     <img src="assets/images/payment-gateways.png" alt="Stripe payments website" loading="lazy" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
                                      <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
                                      <div class="space-y-2">
-                                        <div class="flex items-center"><input type="checkbox" id="c4-1" class="hidden"><label for="c4-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Activate Shopify Payments (using your US LLC and linked US bank account).</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c4-1" class="hidden"><label for="c4-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Confirm Shopify Payments or Stripe eligibility and submit accurate identity, address, tax, and bank documents.</label></div>
                                         <div class="flex items-center"><input type="checkbox" id="c4-2" class="hidden"><label for="c4-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Connect your PayPal Business account for broad international customer reach.</label></div>
                                         <div class="flex items-center"><input type="checkbox" id="c4-3" class="hidden"><label for="c4-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>(Optional) Add Kenyan gateways like Pesapal or IntaSend if you also plan to target local sales.</label></div>
                                     </div>
@@ -493,8 +516,8 @@
                                      <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
                                      <div class="space-y-2">
                                         <div class="flex items-center"><input type="checkbox" id="c4-4" class="hidden"><label for="c4-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Create shipping zones for all target countries in Shopify.</label></div>
-                                        <div class="flex items-center"><input type="checkbox" id="c4-5" class="hidden"><label for="c4-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Set up shipping rates (Recommended: "Free Insured Shipping" with cost built into product price).</label></div>
-                                        <div class="flex items-center"><input type="checkbox" id="c4-6" class="hidden"><label for="c4-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Clearly state estimated delivery times (2-4 weeks) next to shipping options at checkout.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c4-5" class="hidden"><label for="c4-5" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Price shipping, duties, refunds, processing fees, and returns into your unit economics; do not label shipping insured unless it is.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c4-6" class="hidden"><label for="c4-6" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Publish delivery estimates based on supplier-tested routes, and explain customs charges and delays.</label></div>
                                         <div class="flex items-center"><input type="checkbox" id="c4-7" class="hidden"><label for="c4-7" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Ensure your dropshipping app is set up for automated order fulfillment and tracking updates.</label></div>
                                     </div>
                                 </div>
@@ -611,18 +634,24 @@
                             </div>
                              <div class="accordion-content">
                                 <div class="p-6 border-t border-slate-200 text-slate-700 space-y-4">
-                                    <p>Navigating international tax laws is complex. Proper compliance is critical to avoid penalties and ensure long-term business viability.</p>
+                                    <p>Keep a calendar for state, federal, sales-tax, and Kenyan obligations. Your US tax classification, where the business is actually run, and where customers are located all matter. These are questions to resolve, not filings every LLC automatically owes.</p>
                                     <img src="assets/images/tax-compliance.png" alt="IRS information page about limited liability companies" loading="lazy" class="w-full h-auto rounded-lg shadow-md my-4 max-w-xl mx-auto">
                                     <div class="bg-red-100 border-l-4 border-red-500 p-4 rounded-r-lg">
-                                        <h4 class="font-semibold text-red-800">Critical Action: Hire Tax Professionals</h4>
-                                        <p class="text-red-700">This is not optional. You **MUST** engage both a US tax accountant (for IRS filings) and a Kenyan tax consultant (for KRA filings and treaty benefits) to remain compliant and avoid severe penalties.</p>
+                                        <h4 class="font-semibold text-red-800">Get cross-border advice before the first filing deadline</h4>
+                                        <p class="text-red-700">Ask a US tax professional familiar with foreign-owned LLCs and a Kenyan adviser how your ownership, management location, income, and transactions are treated. There is no US–Kenya income-tax treaty listed by the IRS. Do not plan around treaty benefits that do not exist. <a class="underline" href="https://www.irs.gov/businesses/international-businesses/united-states-income-tax-treaties-a-to-z" target="_blank" rel="noopener noreferrer">IRS treaty list</a> · <a class="underline" href="https://www.kra.go.ke/component/kra_faq/faq/309" target="_blank" rel="noopener noreferrer">KRA guidance</a>.</p>
+                                    </div>
+                                    <div class="bg-slate-50 border border-slate-200 rounded-lg p-4 space-y-2">
+                                        <h4 class="font-semibold text-slate-900">What changed by October 2026</h4>
+                                        <p><strong>Delaware's annual LLC tax is $400, not $300.</strong> It is due June 1; no Delaware LLC annual report is required. <a class="text-teal-700 underline" href="https://corp.delaware.gov/alt-entitytaxinstructions/" target="_blank" rel="noopener noreferrer">Delaware Division of Corporations</a>.</p>
+                                        <p><strong>Federal BOI reporting:</strong> Under FinCEN's current rule, entities created in the US are exempt. A foreign entity registered to do business in the US can be different. Recheck if the rule changes. <a class="text-teal-700 underline" href="https://www.fincen.gov/boi" target="_blank" rel="noopener noreferrer">FinCEN</a>.</p>
+                                        <p><strong>IRS Form 5472:</strong> A foreign-owned US disregarded entity generally files it with a pro-forma Form 1120 when it has reportable related-party transactions, which can include owner contributions or distributions. Classification and transactions matter; it is not a blanket filing rule for all LLCs. <a class="text-teal-700 underline" href="https://www.irs.gov/instructions/i5472" target="_blank" rel="noopener noreferrer">IRS instructions</a>.</p>
                                     </div>
                                      <h4 class="font-semibold text-slate-800 pt-4">Your Checklist:</h4>
                                      <div class="space-y-2">
-                                        <div class="flex items-center"><input type="checkbox" id="c7-1" class="hidden"><label for="c7-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>File Wyoming Annual Report (via your registered agent) to maintain LLC good standing.</label></div>
-                                        <div class="flex items-center"><input type="checkbox" id="c7-2" class="hidden"><label for="c7-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>File IRS Form 5472 and pro-forma 1120 with your US accountant annually.</label></div>
-                                        <div class="flex items-center"><input type="checkbox" id="c7-3" class="hidden"><label for="c7-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Declare global income with your Kenyan tax consultant, leveraging the US-Kenya Double Taxation Treaty.</label></div>
-                                        <div class="flex items-center"><input type="checkbox" id="c7-4" class="hidden"><label for="c7-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Stay updated on sales tax nexus requirements as your business scales in the US.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-1" class="hidden"><label for="c7-1" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span><span data-annual-requirement>Wyoming: calendar the annual report/license tax for the first day of the anniversary month.</span></label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-2" class="hidden"><label for="c7-2" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Confirm federal tax classification and whether Form 5472 with pro-forma 1120 or other returns apply; record owner contributions and distributions.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-3" class="hidden"><label for="c7-3" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Review Kenyan tax treatment of the business and keep records for both jurisdictions.</label></div>
+                                        <div class="flex items-center"><input type="checkbox" id="c7-4" class="hidden"><label for="c7-4" class="flex items-center cursor-pointer"><span class="checkbox-icon w-5 h-5 mr-3 rounded border-2 border-slate-300 bg-white inline-block"></span>Check sales-tax nexus by destination and review state rules as sales grow. <a class="ml-1 text-teal-700 underline" href="https://www.streamlinedsalestax.org/for-businesses/remote-seller-faqs" target="_blank" rel="noopener noreferrer">Remote seller guide</a>.</label></div>
                                     </div>
                                 </div>
                             </div>
@@ -654,9 +683,9 @@
                 <section id="conclusion" class="phase-content">
                     <div class="bg-gradient-to-r from-teal-600 to-teal-800 text-white p-8 rounded-xl shadow-lg mb-8 text-center">
                         <h2 class="text-4xl font-bold mb-4">Your Global E-commerce Journey Awaits!</h2>
-                        <p class="text-lg leading-relaxed mb-6">You now have a comprehensive blueprint to build and scale your dropshipping business from Kenya to the world, powered by a robust US LLC. This guide provides the knowledge and actionable steps you need to succeed.</p>
+                        <p class="text-lg leading-relaxed mb-6">Use this as a working checklist, not a guarantee. Test the product and supplier, verify payment eligibility, and only take on an LLC's recurring obligations if the business case supports it.</p>
                         <img src="assets/images/commerce-journey.jpg" alt="Container ships and cranes at a busy port" loading="lazy" class="w-full h-auto rounded-lg shadow-md mb-6 mx-auto max-w-2xl">
-                        <p class="text-xl font-light mb-8">The path to becoming a successful global entrepreneur is within your reach. Take action, stay persistent, and adapt to the dynamic e-commerce landscape.</p>
+                        <p class="text-xl font-light mb-8">Recheck official state, IRS, FinCEN, platform, and Kenyan guidance before each filing or launch decision.</p>
                         <button onclick="document.querySelector('[data-phase=\'welcome\']').click();" class="mt-8 bg-white text-teal-700 font-bold py-3 px-8 rounded-full text-lg shadow-xl hover:bg-teal-50 hover:text-teal-800 transition-all duration-300">Review the Guide Again</button>
                     </div>
                 </section>
@@ -667,6 +696,20 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        const stateButtons = document.querySelectorAll('[data-llc-state]');
+        const statePanels = document.querySelectorAll('[data-state-panel]');
+        const annualRequirement = document.querySelector('[data-annual-requirement]');
+        const annualText = {
+            wyoming: 'Wyoming: calendar the annual report/license tax for the first day of the anniversary month.',
+            delaware: 'Delaware: calendar the $400 annual LLC tax due June 1; no state LLC annual report is required.',
+            other: 'Your chosen state: verify its annual report, tax, registered-agent, and foreign-registration deadlines.'
+        };
+        stateButtons.forEach(button => button.addEventListener('click', () => {
+            const choice = button.dataset.llcState;
+            stateButtons.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+            statePanels.forEach(panel => { panel.hidden = panel.dataset.statePanel !== choice; });
+            annualRequirement.textContent = annualText[choice];
+        }));
         const navLinks = document.querySelectorAll('.nav-link');
         const contentSections = document.querySelectorAll('.phase-content');
         const accordionHeaders = document.querySelectorAll('.accordion-header');
